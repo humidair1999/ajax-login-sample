@@ -1,12 +1,23 @@
-$('#user-login-form').on('submit', function(evt) {
-    var serializedFormInput = $(this).serializeArray(),
-        formData = {};
+(function() {
+    $.ajax({
+        url: 'http://localhost:3000/api/v1/sessions/seed',
+        type: 'get'
+    }).done(function(seed) {
+        console.log(seed);
+    }).fail(function() {
+        console.log('error');
+    });
 
-    evt.preventDefault();
+    $('#user-login-form').on('submit', function(evt) {
+        var serializedFormInput = $(this).serializeArray(),
+            formData = {};
 
-    for (var i in serializedFormInput) {
-        formData[serializedFormInput[i].name] = serializedFormInput[i].value;
-    }
+        evt.preventDefault();
 
-    console.log(formData);
-});
+        for (var i in serializedFormInput) {
+            formData[serializedFormInput[i].name] = serializedFormInput[i].value;
+        }
+
+        console.log(formData);
+    });
+})();
