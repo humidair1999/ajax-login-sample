@@ -2,8 +2,10 @@
     $.ajax({
         url: 'http://localhost:3000/api/v1/sessions/seed',
         type: 'get'
-    }).done(function(seed) {
-        console.log(seed);
+    }).done(function(data) {
+        console.log(data);
+
+        $('#unique-seed').val(data.seed);
     }).fail(function() {
         console.log('error');
     });
