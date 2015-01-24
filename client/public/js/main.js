@@ -29,21 +29,27 @@
             }
 
             console.log(formData);
+
+            console.log(md5(formData.password));
         });
     };
     
-    $.ajax({
-        url: 'http://localhost:3000/api/v1/sessions/seed',
-        type: 'get'
-    }).done(function(data) {
-        console.log(data);
+    var retrieveUniqueSeed = function() {
+        $.ajax({
+            url: 'http://localhost:3000/api/v1/sessions/seed',
+            type: 'get'
+        }).done(function(data) {
+            console.log(data);
 
-        setTimeout(function() {
-            activateLoginForm();
+            setTimeout(function() {
+                activateLoginForm();
 
-            $('#seed-input').val(data.seed);
-        }, 500);
-    }).fail(function() {
-        console.log('error');
-    });
+                $('#seed-input').val(data.seed);
+            }, 500);
+        }).fail(function() {
+            console.log('error');
+        });
+    };
+
+    retrieveUniqueSeed();
 })();
