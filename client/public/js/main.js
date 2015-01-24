@@ -1,7 +1,14 @@
 (function() {
-    var formInputs = [  $('#username-input'),
-                        $('#password-input'),
-                        $('#submit-input')];
+    var $formInputs = {
+        usernameInput: $('#username-input'),
+        passwordInput: $('#password-input'),
+        seedInput: $('#seed-input'),
+        submitInput: $('#submit-input')
+    };
+
+    var formInputsArr = [   $formInputs.usernameInput,
+                            $formInputs.passwordInput,
+                            $formInputs.submitInput];
 
     var toggleFormInputs = function(inputs, isDisabled) {
         $.each(inputs, function(index, element) {
@@ -9,28 +16,47 @@
 
             $element.prop('disabled', isDisabled);
 
-            if (!isDisabled && $element.attr('id') === 'username-input') {
+            if (!isDisabled && $element.is($formInputs.usernameInput)) {
                 $element.focus();
             }
         });
     };
 
+    var generatePasswordHash = function(enteredPassword, uniqueSeed) {
+        console.log(enteredPassword);
+        console.log(md5(enteredPassword));
+        console.log(md5(enteredPassword, uniqueSeed));
+
+        return md5(enteredPassword, uniqueSeed);
+    };
+
     var activateLoginForm = function() {
-        toggleFormInputs(formInputs, false);
+        toggleFormInputs(formInputsArr, false);
 
         $('#user-login-form').on('submit', function(evt) {
-            var serializedFormInput = $(this).serializeArray(),
-                formData = {};
+            var uniqueSeed = $formInputs.seedInput.val();
 
             evt.preventDefault();
 
-            for (var i in serializedFormInput) {
-                formData[serializedFormInput[i].name] = serializedFormInput[i].value;
-            }
+            toggleFormInputs(formInputsArr, true);
 
-            console.log(formData);
-
-            console.log(md5(formData.password));
+            $.ajax({
+                url: 'http://localhost:3000/api/v1/sessions',
+                type: 'post',
+                data: {
+                    username: $formInputs.usernameInput.val(),
+                    hash: generatePasswordHash($formInputs.passwordInput.val(), uniqueSeed),
+                    seed: uniqueSeed
+                }
+            }).done(function() {
+                console.log('LOGGED IN');
+            }).fail(function() {
+                console.log('FAILED');
+            }).always(function() {
+                setTimeout(function() {
+                    toggleFormInputs(formInputsArr, false);
+                }, 500);
+            });
         });
     };
     
@@ -42,9 +68,9 @@
             console.log(data);
 
             setTimeout(function() {
-                activateLoginForm();
+                $formInputs.seedInput.val(data.seed);
 
-                $('#seed-input').val(data.seed);
+                activateLoginForm();
             }, 500);
         }).fail(function() {
             console.log('error');
