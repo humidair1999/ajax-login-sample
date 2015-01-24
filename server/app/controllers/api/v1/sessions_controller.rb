@@ -23,6 +23,8 @@ module Api
                     if hmac == params['hash']
                         seed.destroy
 
+                        # TODO: assign new session
+
                         render json: { hmac: hmac }
                     else
                         head 403, :error => 'Incorrect password'
