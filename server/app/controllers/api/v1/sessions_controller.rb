@@ -2,28 +2,33 @@ module Api
     module V1
         class SessionsController < BaseController
             def seed
-                # TODO: store seed in table in DB
-                render json: { seed: SecureRandom.hex }
+                seed = Seed.create(value: SecureRandom.hex)
+
+                render json: { seed: seed.value }
             end
 
             def create
-                # TODO: check if seed is valid in database
-
-                p params
-
-                # database will contain hashed password
-
-                seed = params['seed']
+                seed_value = params['seed']
                 # hard-code the sha1 for the string 'lol' for testing purposes
                 data = '403926033d001b5279df37cbbe5287b7c7c267fa'
 
-                digest = OpenSSL::Digest.new('sha1')
-                hmac = OpenSSL::HMAC.hexdigest(digest, seed, data)
+                seed = Seed.find_by(value: seed_value)
 
-                if hmac == params['hash']
-                    render json: { hmac: hmac }
+                if Seed.exists?(seed)
+                    # database will contain hashed password
+
+                    digest = OpenSSL::Digest.new('sha1')
+                    hmac = OpenSSL::HMAC.hexdigest(digest, seed_value, data)
+
+                    if hmac == params['hash']
+                        seed.destroy
+
+                        render json: { hmac: hmac }
+                    else
+                        head 403, :error => 'Incorrect password'
+                    end
                 else
-                    head 403
+                    head 403, :error => 'Invalid unique seed provided'
                 end
             end
 
