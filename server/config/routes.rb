@@ -21,6 +21,8 @@ Rails.application.routes.draw do
           get 'seed'
         end
       end
+
+      resources :users
     end
   end
 

@@ -93,7 +93,7 @@
         evt.preventDefault();
 
         $.ajax({
-            url: 'http://localhost:3000/api/v1/sessions/seed',
+            url: 'http://localhost:3000/api/v1/users',
             type: 'post',
             data: {
                 username: $('#new-username-input').val(),
