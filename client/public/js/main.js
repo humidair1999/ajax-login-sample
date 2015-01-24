@@ -96,13 +96,15 @@
             url: 'http://localhost:3000/api/v1/users',
             type: 'post',
             data: {
-                username: $('#new-username-input').val(),
-                hash: generatePasswordHash($('#new-password-input').val())
+                user: {
+                    username: $('#new-username-input').val(),
+                    password: generatePasswordHash($('#new-password-input').val())
+                }
             }
-        }).done(function() {
-            console.log('success');
-        }).fail(function() {
-            console.log('fail');
+        }).done(function(data) {
+            console.log(data);
+        }).fail(function(error) {
+            console.log(error);
         });
     })
 
