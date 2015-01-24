@@ -8,29 +8,31 @@ module Api
             end
 
             def create
-                seed_value = params['seed']
-                # hard-code the sha1 for the string 'lol' for testing purposes
-                data = '403926033d001b5279df37cbbe5287b7c7c267fa'
+                user = User.find_by(username: params['username'])
 
-                seed = Seed.find_by(value: seed_value)
+                if User.exists?(user)
+                    seed_value = params['seed']
 
-                if Seed.exists?(seed)
-                    # database will contain hashed password
+                    seed = Seed.find_by(value: seed_value)
 
-                    digest = OpenSSL::Digest.new('sha1')
-                    hmac = OpenSSL::HMAC.hexdigest(digest, seed_value, data)
+                    if Seed.exists?(seed)
+                        digest = OpenSSL::Digest.new('sha1')
+                        hmac = OpenSSL::HMAC.hexdigest(digest, seed_value, user.password)
 
-                    if hmac == params['hash']
-                        seed.destroy
+                        if hmac == params['hash']
+                            seed.destroy
 
-                        # TODO: assign new session
+                            # TODO: assign new session
 
-                        render json: { hmac: hmac }
+                            render json: { hmac: hmac }
+                        else
+                            head 403, :error => 'Incorrect password'
+                        end
                     else
-                        head 403, :error => 'Incorrect password'
+                        head 403, :error => 'Invalid unique seed provided'
                     end
                 else
-                    head 403, :error => 'Invalid unique seed provided'
+                    head 403, :error => 'User not found'
                 end
             end
 
