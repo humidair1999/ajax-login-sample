@@ -1,21 +1,21 @@
-<div id="user-login-form-container" style="visibility: hidden;">
+<div id="user-login-form-container">
     <form id="user-login-form">
-        <input type="hidden" id="unique-seed" name="seed">
+        <input type="hidden" id="seed-input" name="seed">
 
         <label>
             <span>Username: &nbsp;</span>
-            <input type="text" name="username">
+            <input type="text" id="username-input" name="username" disabled>
         </label>
 
         <br>
 
         <label>
             <span>Password: &nbsp;</span>
-            <input type="password" name="password">
+            <input type="password" id="password-input" name="password" disabled>
         </label>
 
         <br>
 
-        <input type="submit" value="log in">
+        <input type="submit" id="submit-input" value="log in" disabled>
     </form>
 </div>

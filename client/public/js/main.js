@@ -1,6 +1,22 @@
 (function() {
+    var formInputs = [  $('#username-input'),
+                        $('#password-input'),
+                        $('#submit-input')];
+
+    var toggleFormInputs = function(inputs, isDisabled) {
+        $.each(inputs, function(index, element) {
+            var $element = $(element);
+
+            $element.prop('disabled', isDisabled);
+
+            if (!isDisabled && $element.attr('id') === 'username-input') {
+                $element.focus();
+            }
+        });
+    };
+
     var activateLoginForm = function() {
-        $('#user-login-form-container').css('visibility', 'visible');
+        toggleFormInputs(formInputs, false);
 
         $('#user-login-form').on('submit', function(evt) {
             var serializedFormInput = $(this).serializeArray(),
@@ -25,7 +41,7 @@
         setTimeout(function() {
             activateLoginForm();
 
-            $('#unique-seed').val(data.seed);
+            $('#seed-input').val(data.seed);
         }, 500);
     }).fail(function() {
         console.log('error');
