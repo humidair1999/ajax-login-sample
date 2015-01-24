@@ -11,6 +11,8 @@ module Api
                 render json: { user_id: 45 }
             end
 
+            # TODO: probably don't need this; was used to demonstrate OPTIONS
+            #  preflight requests
             def update
                 render json: { is_user_updated: true }
             end

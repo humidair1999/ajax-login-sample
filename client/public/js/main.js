@@ -23,11 +23,16 @@
     };
 
     var generatePasswordHash = function(enteredPassword, uniqueSeed) {
-        console.log(enteredPassword);
-        console.log(md5(enteredPassword));
-        console.log(md5(enteredPassword, uniqueSeed));
+        var shaObj = new jsSHA(enteredPassword, "TEXT");
+        var hash = shaObj.getHash("SHA-1", "HEX");
+        var hmac = shaObj.getHMAC(uniqueSeed, "TEXT", "SHA-1", "HEX");
 
-        return md5(enteredPassword, uniqueSeed);
+        console.log('password: ', enteredPassword);
+        console.log('seed: ', uniqueSeed);
+        console.log('hash: ', hash);
+        console.log('hmac: ', hmac);
+
+        return hmac;
     };
 
     var activateLoginForm = function() {
@@ -41,8 +46,8 @@
             toggleFormInputs(formInputsArr, true);
 
             $.ajax({
-                url: 'http://localhost:3000/api/v1/sessions/45',
-                type: 'put',
+                url: 'http://localhost:3000/api/v1/sessions',
+                type: 'post',
                 data: {
                     username: $formInputs.usernameInput.val(),
                     hash: generatePasswordHash($formInputs.passwordInput.val(), uniqueSeed),
