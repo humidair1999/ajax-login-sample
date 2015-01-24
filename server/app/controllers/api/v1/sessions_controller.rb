@@ -18,9 +18,13 @@ module Api
                 data = '403926033d001b5279df37cbbe5287b7c7c267fa'
 
                 digest = OpenSSL::Digest.new('sha1')
-                hmac = OpenSSL::HMAC.hexdigest(digest, seed, 'lol')
+                hmac = OpenSSL::HMAC.hexdigest(digest, seed, data)
 
-                render json: { hmac: hmac }
+                if hmac == params['hash']
+                    render json: { hmac: hmac }
+                else
+                    head 403
+                end
             end
 
             # TODO: probably don't need this; was used to demonstrate OPTIONS

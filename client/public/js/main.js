@@ -23,16 +23,20 @@
     };
 
     var generatePasswordHash = function(enteredPassword, uniqueSeed) {
-        var shaObj = new jsSHA(enteredPassword, "TEXT");
-        var hash = shaObj.getHash("SHA-1", "HEX");
-        var hmac = shaObj.getHMAC(uniqueSeed, "TEXT", "SHA-1", "HEX");
+        // generate a hashed variant of the plaintext password
+        var plaintextPassSHA = new jsSHA(enteredPassword, 'TEXT');
+        var plaintextPassHash = plaintextPassSHA.getHash('SHA-1', 'HEX');
+
+        // generate an HMAC hashed variant of the hashed password
+        var hashedPassSHA = new jsSHA(plaintextPassHash, 'TEXT');
+        var hashedPassHMAC = hashedPassSHA.getHMAC(uniqueSeed, 'TEXT', 'SHA-1', 'HEX');
 
         console.log('password: ', enteredPassword);
         console.log('seed: ', uniqueSeed);
-        console.log('hash: ', hash);
-        console.log('hmac: ', hmac);
+        console.log('hash: ', plaintextPassHash);
+        console.log('hmac: ', hashedPassHMAC);
 
-        return hmac;
+        return hashedPassHMAC;
     };
 
     var activateLoginForm = function() {
