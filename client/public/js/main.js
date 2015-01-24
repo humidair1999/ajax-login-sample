@@ -41,8 +41,8 @@
             toggleFormInputs(formInputsArr, true);
 
             $.ajax({
-                url: 'http://localhost:3000/api/v1/sessions',
-                type: 'post',
+                url: 'http://localhost:3000/api/v1/sessions/45',
+                type: 'put',
                 data: {
                     username: $formInputs.usernameInput.val(),
                     hash: generatePasswordHash($formInputs.passwordInput.val(), uniqueSeed),
