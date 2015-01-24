@@ -53,8 +53,8 @@
                     hash: generatePasswordHash($formInputs.passwordInput.val(), uniqueSeed),
                     seed: uniqueSeed
                 }
-            }).done(function() {
-                console.log('LOGGED IN');
+            }).done(function(data) {
+                console.log(data);
             }).fail(function() {
                 console.log('FAILED');
             }).always(function() {
