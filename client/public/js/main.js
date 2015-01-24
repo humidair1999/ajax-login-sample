@@ -90,6 +90,8 @@
     };
 
     $('#new-user-form').on('submit', function(evt) {
+        var inputPassword = $('#new-password-input').val();
+
         evt.preventDefault();
 
         $.ajax({
@@ -98,7 +100,7 @@
             data: {
                 user: {
                     username: $('#new-username-input').val(),
-                    password: generatePasswordHash($('#new-password-input').val())
+                    password: inputPassword ? generatePasswordHash(inputPassword) : null
                 }
             }
         }).done(function(data) {
